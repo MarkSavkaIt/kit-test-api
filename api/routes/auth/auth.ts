@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import login from "./login/login";
+import register from "./register/register";
 
 const auth: Router = express.Router();
 
@@ -8,5 +9,6 @@ auth.get("/", (req, res) => {
 });
 
 auth.use("/login", login);
+auth.use("/register", register);
 
 export default auth;

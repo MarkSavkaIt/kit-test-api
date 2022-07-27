@@ -6,12 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const auth_1 = __importDefault(require("./api/routes/auth/auth"));
+const mongoose_1 = __importDefault(require("mongoose"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
 });
+const conn = mongoose_1.default.connect("mongodb://localhost:27017/test");
 app.use("/auth", auth_1.default);
 app.listen(port, () => {
     console.log(`⚡️[server]: Server run at https://localhost:${port}`);
