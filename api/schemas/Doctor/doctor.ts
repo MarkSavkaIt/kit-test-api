@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+const doctorSchema = new Schema({
   id: mongoose.Types.ObjectId,
   email: String,
   reg_token: String,
@@ -9,9 +9,11 @@ const userSchema = new Schema({
   phone: String,
   name: String,
   type: String,
-  appointments: [String],
+  spec: String,
+  free: Boolean,
+  appointments_accepted: [String],
 });
 
-const User = mongoose.model("User", userSchema);
+const Doctor = mongoose.model("Doctor", doctorSchema);
 
-export default User;
+export default Doctor;
