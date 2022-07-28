@@ -1,8 +1,10 @@
 import express, { Request, Response, Router } from "express";
-import mongoose from "mongoose";
 import User from "../../../schemas/User/user";
 import jsonwebtoken from "jsonwebtoken";
-import { checkPropsDataDoctor, checkPropsDataUser } from "../../../middlewares/checkPropsData";
+import {
+  checkPropsDataDoctor,
+  checkPropsDataUser,
+} from "../../../middlewares/checkPropsData";
 import { checkIsEmailExist } from "../../../middlewares/checkIsExistEmail";
 const jwt = jsonwebtoken;
 
@@ -10,8 +12,7 @@ const register: Router = express.Router();
 
 register.use(express.json()); // if delete this line, req.body dont work. I`m not sure how is it works
 
-register.get("/", (req, res) => {
-  // res.status(200).send("Register get works");
+register.get("/", (req: Request, res: Response) => {
   res.status(200).send({ message: "Register get works", date: Date() });
 });
 
@@ -25,7 +26,7 @@ register.post(
   "/user",
   checkPropsDataUser,
   checkIsEmailExist,
-  (req, res: Response) => {
+  (req: Request, res: Response) => {
     const { email, photo_avatar, phone, name } = req.body;
 
     const user = new User({
@@ -42,7 +43,7 @@ register.post(
       { user_id: user._id, email: email },
       "secret key",
       {
-        expiresIn: "2h",
+        expiresIn: "2min",
       }
     );
 
@@ -63,7 +64,7 @@ register.post(
   "/doctor",
   checkPropsDataDoctor,
   checkIsEmailExist,
-  (req, res: Response) => {
+  (req: Request, res: Response) => {
     const { email, photo_avatar, phone, name, spec, free } = req.body;
 
     const user = new User({
