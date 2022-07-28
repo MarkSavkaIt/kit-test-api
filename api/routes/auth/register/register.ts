@@ -43,7 +43,7 @@ register.post(
       { user_id: user._id, email: email },
       "secret key",
       {
-        expiresIn: "2min",
+        expiresIn: "1h",
       }
     );
 
