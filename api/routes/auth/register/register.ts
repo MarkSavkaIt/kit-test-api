@@ -10,8 +10,6 @@ const jwt = jsonwebtoken;
 
 const register: Router = express.Router();
 
-register.use(express.json()); // if delete this line, req.body dont work. I`m not sure how is it works
-
 register.get("/", (req: Request, res: Response) => {
   res.status(200).send({ message: "Register get works", date: Date() });
 });

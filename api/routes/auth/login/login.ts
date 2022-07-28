@@ -6,8 +6,6 @@ const jwt = jsonwebtoken;
 
 const login: Router = express.Router();
 
-login.use(express.json());
-
 login.get("/", (req: Request, res: Response) => {
   res.status(200).send("Login get works");
 });
