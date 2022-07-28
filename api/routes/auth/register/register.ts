@@ -2,6 +2,8 @@ import express, { Request, Response, Router } from "express";
 import mongoose from "mongoose";
 import User from "../../../schemas/User/user";
 import jsonwebtoken from "jsonwebtoken";
+import { checkPropsDataDoctor, checkPropsDataUser } from "../../../middlewares/checkPropsData";
+import { checkIsEmailExist } from "../../../middlewares/checkIsExistEmail";
 const jwt = jsonwebtoken;
 
 const register: Router = express.Router();
@@ -19,36 +21,82 @@ register.post("/", (req: Request, res: Response) => {
     .send({ message: "to register choose /user or /doctor domen" });
 });
 
-register.post("/user", (req, res: Response) => {
-  console.log(req.body);
+register.post(
+  "/user",
+  checkPropsDataUser,
+  checkIsEmailExist,
+  (req, res: Response) => {
+    const { email, photo_avatar, phone, name } = req.body;
 
-  const token = jwt.sign(
-    { user_id: user.id, email: user.email },
-    "secret key",
-    {
-      expiresIn: "2h",
-    }
-  );
+    const user = new User({
+      email,
+      reg_token: "",
+      photo_avatar,
+      phone,
+      name,
+      type: "user",
+      appointments: [],
+    });
 
-  const user = new User({
-    id: new mongoose.Types.ObjectId(),
-    email: "",
-    reg_token: token,
-    photo_avatar: "",
-    phone: "",
-    name: "Mark",
-    type: "user",
-    appointments: [""],
-  });
+    const token: any = jwt.sign(
+      { user_id: user._id, email: email },
+      "secret key",
+      {
+        expiresIn: "2h",
+      }
+    );
 
-  user.save((err: any, success: any) => {
-    if (err) {
-      res
-        .status(200)
-        .send({ message: "User cannot be created : ", error: err });
-    }
-    res.status(200).send({ message: "User was created", token });
-  });
-});
+    user.reg_token = token;
+
+    user.save((err: any, success: any) => {
+      if (err) {
+        res
+          .status(200)
+          .send({ message: "User cannot be created : ", error: err });
+      }
+      res.status(200).send({ message: "User was created", token, user });
+    });
+  }
+);
+
+register.post(
+  "/doctor",
+  checkPropsDataDoctor,
+  checkIsEmailExist,
+  (req, res: Response) => {
+    const { email, photo_avatar, phone, name, spec, free } = req.body;
+
+    const user = new User({
+      email,
+      reg_token: "",
+      photo_avatar,
+      phone,
+      name,
+      type: "doctor",
+      spec,
+      free,
+      appointments: [],
+    });
+
+    const token: any = jwt.sign(
+      { user_id: user._id, email: email },
+      "secret key",
+      {
+        expiresIn: "2h",
+      }
+    );
+
+    user.reg_token = token;
+
+    user.save((err: any, success: any) => {
+      if (err) {
+        res
+          .status(200)
+          .send({ message: "Doctor cannot be created : ", error: err });
+      }
+      res.status(200).send({ message: "Doctor was created", token, user });
+    });
+  }
+);
 
 export default register;

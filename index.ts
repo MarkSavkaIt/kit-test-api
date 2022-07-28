@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import auth from "./api/routes/auth/auth";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
 
 dotenv.config();
 
@@ -19,16 +18,8 @@ const conn = mongoose
 app.use("/auth", auth);
 app.use(express.json());
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
-
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
-});
-
-app.post("/apple", (req, res) => {
-  console.log(req.body);
-  res.send("Hello World!");
 });
 
 app.listen(port, () => {

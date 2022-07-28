@@ -16,14 +16,8 @@ const conn = mongoose_1.default
     .catch((err) => console.log({ message: "Error connect to MongoDB", err: err }));
 app.use("/auth", auth_1.default);
 app.use(express_1.default.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
-});
-app.post("/apple", (req, res) => {
-    console.log(req.body);
-    res.send("Hello World!");
 });
 app.listen(port, () => {
     console.log(`⚡️[server]: Server run at https://localhost:${port}`);
