@@ -10,7 +10,6 @@ export function checkIsEmailExist(
   const { email } = req.body;
   User.findOne({ email }, (err: Error, success: any) => {
     if (err) {
-      console.log("Error get user email", err);
       res.status(400).send({ message: "Server crash" });
     } else if (!success) {
       next();
