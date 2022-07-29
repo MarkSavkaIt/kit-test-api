@@ -50,6 +50,7 @@ appointment.post(
   checkIsDoctorExist,
   async (req: Request, res: Response) => {
     const { email: doctor_email, date } = req.body;
+    // @ts-ignore
     const { _id: doctor_id } = await User.findOne({
       email: doctor_email,
       type: "doctor",
@@ -65,6 +66,25 @@ appointment.post(
     });
 
     await appointment.save();
+
+    const user = await User.findOne({ _id: user_id });
+    // @ts-ignore
+    user.appointments.push(appointment._id);
+    await User.findOneAndUpdate(
+      { _id: user_id },
+      // @ts-ignore
+      { appointments: user.appointments }
+    );
+
+    const doctor = await User.findOne({ _id: doctor_id });
+    // @ts-ignore
+    doctor.appointments.push(appointment._id);
+    await User.findOneAndUpdate(
+      { _id: doctor_id },
+      // @ts-ignore
+      { appointments: doctor.appointments }
+    );
+
     res.send({ message: "Appointment have created", appointment });
   }
 );
