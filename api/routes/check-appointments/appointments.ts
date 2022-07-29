@@ -114,4 +114,19 @@ appointment.get(
   }
 );
 
+appointment.post(
+  "/approve",
+  checkAuth,
+  checkDoctorType,
+  async (req: Request, res: Response) => {
+    const { id } = req.body;
+    if (!id) {
+      res.send({ message: "You forgot paste id" });
+      return;
+    }
+    await Appointments.findOneAndUpdate({ _id: id }, { active: true });
+    res.send({ message: "Approve update" });
+  }
+);
+
 export default appointment;
