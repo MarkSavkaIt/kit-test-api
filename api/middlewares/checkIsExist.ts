@@ -17,7 +17,18 @@ export function checkIsEmailExist(
       res.status(409).send({ message: "Email already exist" });
     }
   });
-  // if (email) {
-  // next();
-  // } else res.status(400).send({ message: "You forgot some keys" });
+}
+
+export async function checkIsDoctorExist(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const doctor_email = req.body.email;
+
+  const doctor = await User.find({ email: doctor_email, type: "doctor" });
+
+  if (!doctor.length) {
+    res.send({ message: "Doctor is not defined" });
+  } else next();
 }

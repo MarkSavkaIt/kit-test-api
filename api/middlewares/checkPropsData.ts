@@ -49,3 +49,21 @@ export function checkPropsDataDoctor(
       .send({ message: "You forgot some keys", keys: str.join(" ") });
   }
 }
+
+export function checkPropsDataAppointment(
+  req: any,
+  res: Response,
+  next: NextFunction
+) {
+  const { email, date } = req.body;
+  if (email && date) {
+    next();
+  } else {
+    const str = [];
+    email ? "" : str.push("email");
+    date ? "" : str.push("date");
+    res
+      .status(400)
+      .send({ message: "You forgot some keys", keys: str.join(" ") });
+  }
+}

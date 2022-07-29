@@ -5,7 +5,7 @@ import {
   checkPropsDataDoctor,
   checkPropsDataUser,
 } from "../../../middlewares/checkPropsData";
-import { checkIsEmailExist } from "../../../middlewares/checkIsExistEmail";
+import { checkIsEmailExist } from "../../../middlewares/checkIsExist";
 const jwt = jsonwebtoken;
 
 const register: Router = express.Router();

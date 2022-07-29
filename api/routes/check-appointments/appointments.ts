@@ -4,6 +4,8 @@ import Appointments from "../../schemas/Appointments/appointments";
 import jsonwebtoken from "jsonwebtoken";
 import User from "../../schemas/User/user";
 import { checkUserType } from "../../middlewares/checkUserType";
+import { checkPropsDataAppointment } from "../../middlewares/checkPropsData";
+import { checkIsDoctorExist } from "../../middlewares/checkIsExist";
 
 const jwt = jsonwebtoken;
 
@@ -38,8 +40,33 @@ appointment.get(
   }
 );
 
-appointment.post("/", checkAuth, (req: Request, res: Response) => {
-  res.send("post works");
-});
+appointment.use(express.json());
+
+appointment.post(
+  "/",
+  checkAuth,
+  checkUserType,
+  checkPropsDataAppointment,
+  checkIsDoctorExist,
+  async (req: Request, res: Response) => {
+    const { email: doctor_email, date } = req.body;
+    const { _id: doctor_id } = await User.findOne({
+      email: doctor_email,
+      type: "doctor",
+    });
+    const token = req.headers["x-access-token"];
+    // @ts-ignore
+    const { user_id } = jwt.verify(token, "secret key");
+
+    const appointment = new Appointments({
+      user: user_id,
+      doctor: doctor_id,
+      date,
+    });
+
+    await appointment.save();
+    res.send({ message: "Appointment have created", appointment });
+  }
+);
 
 export default appointment;

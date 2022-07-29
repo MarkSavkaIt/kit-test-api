@@ -8,6 +8,7 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+app.use(express.json());
 
 const conn = mongoose
   .connect("mongodb://localhost:27017/test")
@@ -16,15 +17,13 @@ const conn = mongoose
     console.log({ message: "Error connect to MongoDB", err: err })
   );
 
-app.use(express.json());
-
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
 app.use("/auth", auth);
 
-app.use('/appointments', appointment)
+app.use("/appointments", appointment);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server run at https://localhost:${port}`);
