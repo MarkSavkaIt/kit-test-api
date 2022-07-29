@@ -3,7 +3,10 @@ import { checkAuth } from "../../middlewares/checkAuth";
 import Appointments from "../../schemas/Appointments/appointments";
 import jsonwebtoken from "jsonwebtoken";
 import User from "../../schemas/User/user";
-import { checkUserType } from "../../middlewares/checkUserType";
+import {
+  checkDoctorType,
+  checkUserType,
+} from "../../middlewares/checkUserType";
 import { checkPropsDataAppointment } from "../../middlewares/checkPropsData";
 import { checkIsDoctorExist } from "../../middlewares/checkIsExist";
 
@@ -86,6 +89,28 @@ appointment.post(
     );
 
     res.send({ message: "Appointment have created", appointment });
+  }
+);
+
+appointment.get(
+  "/approve",
+  checkAuth,
+  checkDoctorType,
+  async (req: Request, res: Response) => {
+    const token = req.headers["x-access-token"];
+    // @ts-ignore
+    const deprecated = jwt.verify(token, "secret key");
+    // @ts-ignore
+    const doctor = await User.findOne({ _id: deprecated.user_id });
+    if (doctor.appointments.length) {
+      const appointments = await Appointments.find()
+        .where("_id")
+        .in(doctor.appointments);
+      console.log({ appointments });
+      res.send({ message: "Your appointments", appointments });
+    } else {
+      res.send({ message: "Appointments not found" });
+    }
   }
 );
 
