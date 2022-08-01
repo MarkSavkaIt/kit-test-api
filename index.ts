@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import auth from "./api/routes/auth/auth";
 import mongoose from "mongoose";
-import appointment from "./api/routes/check-appointments/appointments";
+import appointment from "./api/routes/appointments/appointments";
 
 dotenv.config();
 
